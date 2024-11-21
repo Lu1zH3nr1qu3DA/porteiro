@@ -1,4 +1,4 @@
-//NECESSÁRIOS PARA O LOGIN:
+// Necessários para o login:
 'use strict';
 const Discord = require('discord.js');
 const config = require('./config.json');
@@ -7,17 +7,14 @@ const client = new Discord.Client({ intents: [
   Discord.GatewayIntentBits.GuildMessages
 ]});
 client.login(config.token);
-//
 
-//AO FAZER LOGIN:
+// Ao fazer login:
 client.on('ready', () => {
   client.user.setActivity('Fogaréu Grátis');
   console.log(`Estou pronto!`);
 });
-//
 
-//BOAS VINDAS && DESPEDIDAS:
-  ///BOAS VINDAS:
+// Boas vindas:
 client.on('guildMemberAdd', member => {
   console.log(`[${member.guild.name}] (${member})`);
   const wc = member.guild.channels.cache.find(ch => ch.name === 'boas-vindas');
@@ -25,17 +22,15 @@ client.on('guildMemberAdd', member => {
   wc.send(`Eae, ${member}! Seja bem vindo ao servidor! Por favor, leia as ${rc.toString()} do servidor.
 ${config.bfdgl}`);
 });
-  ///
 
-  ///DESPEDIDAS:
+// Despedidas:
 client.on('guildMemberRemove', member => {
   console.log(`[${member.guild.name}] ${member}`);
   const fc = member.guild.channels.cache.find(ch => ch.name === 'despedidas');
   fc.send(`Putz, ${member.user.username} foi embora. Vai e volta hein? ${config.fegl}`);
 });
-  ///
 
-//RESPONDER MENSAGENS:
+// Responder mensagens:
 client.on('message', msg => {
   if (msg.author.bot) return;
   const cc = msg.guild.channels.cache.find(ch => ch.name === 'comandos');
@@ -44,7 +39,7 @@ client.on('message', msg => {
   const trumpskatededo = client.emojis.cache.find(emoji => emoji.name === "trumpskatededo");
   if (msg.channel === cc || msg.channel === ps) {
 
-    ///AJUDA:
+    // Ajuda:
     if (msg.content === '!help') {
       msg.reply(`essa é a lista de comandos que você pode usar:
       !grn = gera um número aleatório entre 0 e 9.
@@ -62,9 +57,7 @@ client.on('message', msg => {
       msg.channel.send(`${trumpskatededo}`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !help`);
     };
-    ///
-  
-    ///CARA/COROA:
+    // Cara ou coroa:
     if (msg.content === '!tc') {
     const grnbr = Math.round(Math.random() * 1);
       if (grnbr == 0 ) {
@@ -76,17 +69,15 @@ client.on('message', msg => {
         console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !tc - o resultado foi cara.`);
       };
     };
-    ///
-  
-    ///NÚMERO ALEATÓRIO:
+
+    // Número aleatório:
     if (msg.content === '!grn') {
     const grnbr = Math.round(Math.random() * 9);
       msg.reply(`o resultado foi ${grnbr}.`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !grn - o resultado foi ${grnbr}.`);
     };
-    ///
-  
-    ///CAÇA NIQUEIS:
+
+    //Caça níqueis:
     if (msg.content === '!cnq') {
     const r1 = Math.round(Math.random() * 9);
     const r2 = Math.round(Math.random() * 9);
@@ -99,10 +90,8 @@ client.on('message', msg => {
           console.log(`[${msg.guild.name}/${msg.channel.name}] INCRÍVEL, ${msg.author.username} GANHOU!!!`);
       };
     };
-    ///
-  
-  
-    ///ROLAR DADO:
+
+    // Rolar dado:
     if (msg.content === '!rd') {
     const grnbr = Math.floor(Math.random() *5+1);
       msg.reply(`o resultado foi ${grnbr}.`);
