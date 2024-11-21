@@ -93,7 +93,7 @@ client.on('message', msg => {
 
     // Rolar dado:
     if (msg.content === '!rd') {
-    const grnbr = Math.floor(Math.random() *5+1);
+    const grnbr = Math.floor(Math.random() * 5 + 1);
       msg.reply(`o resultado foi ${grnbr}.`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !rd - o resultado foi ${grnbr}.`);
     };
