@@ -97,23 +97,20 @@ client.on('message', msg => {
       msg.reply(`o resultado foi ${grnbr}.`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !rd - o resultado foi ${grnbr}.`);
     };
-    ///
-    
-    ///MOSTRAR URL DO AVATAR DO AUTOR DA MENSAGEM:
+
+    // Mostrar URL do avatar do autor da mensagem:
     if (msg.content === '!avt') {
       msg.reply(`este é o seu avatar: ${msg.author.displayAvatarURL()}`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !avt - este é o seu avatar: msg.author.displayAvatarURL()`);
     };
-    ///
-  
-    ///MOSTRAR QUANTIDADE DE PARTICIPANTES NO SERVIDOR:
+
+    // Mostrar número de membros do servidor:
     if (msg.content === '!mbrct') {
       msg.reply(`atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
       console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !mbrct - atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
     };
-    ///
-  
-    ///MOSTRAR URL DO AVATAR DO MEMBRO MENCIONADO NA MENSAGEM:
+
+    // Mostrar URL do avatar do membro mencionado:
     if (!msg.guild) return;
     if (msg.content.startsWith('!avt ')) {
     const nossocasinha = msg.mentions.users.first();
@@ -134,17 +131,15 @@ client.on('message', msg => {
         msg.reply("você não mencionou o membro que quer ver o avatar.");
       };
     };
-    ///
-  
-    ///MOSTRAR HÁ QUANTO TEMPO O SERVIDOR FOI CRIADO:
+
+    // Mostrar há quanto tempo o servidor foi criado:
     if (msg.content === `!since guild`) {
     const guild = msg.guild;
           msg.channel.send(`O servidor existe desde ${guild.createdAt.toLocaleDateString()}. Já faz um bom tempo!`);
           console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !since guild - O servidor existe desde ${guild.createdAt}!`);
     };
-    ///
-  
-    ///MOSTRAR HÁ QUANTO TEMPO O MEMBRO MENCIONADO TEM SEU PERFIL NO DISCORD:
+
+    // Mostrar há quanto tempo o membro mencionado tem seu perfil do Discord:
     if (!msg.guild) return;
     if (msg.content === `!since ${msg.mentions.users}`) {
     const user = msg.mentions.users.first();
@@ -163,9 +158,8 @@ client.on('message', msg => {
         msg.channel.send("você não mencionou o membro.");
       };
     };
-    ///
-  
-    ///MOSTRAR HÁ QUANTO TEMPO O AUTOR DA MENSAGEM ESTÁ NO SERVIDOR:
+
+    // Mostrar há quanto tempo o autor da mensagem é membro do servidor:
     if (!msg.guild) return;
     if (msg.content ==='!mbrsince') {
     const member = msg.guild.member(msg.author);
@@ -179,9 +173,8 @@ client.on('message', msg => {
           msg.channel.send("Ocorreu algum erro. Tente novamente.");
         }
     }
-    ///
 
-    ///MOSTRAR HÁ QUANTO TEMPO O MEMBRO MENCIONADO ESTÁ NO SERVIDOR:
+    // Mostrar há quanto tempo o membro mencionado faz parte do servidor:
     if (!msg.guild) return;
     if (msg.content === `!mbrsince ${msg.mentions.users}`) {
     const nossocasinha = msg.mentions.users.first();
@@ -202,14 +195,11 @@ client.on('message', msg => {
       };
       };
     };
-    ///
 
-  ///ALERTA DE MENSAGEM CONTENDO CONVITES DE OUTROS SERVIDORES:
+  // Alerta de convite de outros servidores:
   const regex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li|club)|discordapp\.com\/invite|discord\.com\/invite)\/.+[a-z]/gi;
   if (regex.exec(msg.content)) {
   msg.channel.send(`ae ${adm}, maluco mando convite ae`);
   };
-  ///
 });
-//
 client.on('error', console.error);
