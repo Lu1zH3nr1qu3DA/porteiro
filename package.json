@@ -1,6 +1,6 @@
 {
   "name": "porteiro",
-  "version": "6.3.15",
+  "version": "18.0.0",
   "description": "eh foda ser porteiro de todo esse gado",
   "main": "index.js",
   "scripts": {
