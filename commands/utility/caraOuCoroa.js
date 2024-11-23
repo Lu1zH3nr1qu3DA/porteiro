@@ -2,12 +2,12 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('tc')
-		.setDescription('Gera uma resposta aleatória entre cara e coroa'),
+		.setName('caraoucoroa')
+		.setDescription('Gera uma resposta aleatória de cara ou coroa'),
 	async execute(interaction) {
-        const randomN = Math.round(Math.random());
-        const resultado = '';
-        switch (randomN) {
+        const nAleatorio = Math.round(Math.random() * 1);
+        let resultado = '';
+        switch (nAleatorio) {
             case 0:
                 resultado = "coroa";
             break;

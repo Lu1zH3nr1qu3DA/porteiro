@@ -1,3 +1,4 @@
+// Login
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -45,7 +46,7 @@ client.login(token);
 
 
 
-
+// Código antigo
 
 // // Responder mensagens:
 // try {
@@ -177,14 +178,3 @@ client.login(token);
 //         };
 //         };
 //       };
-  
-//     // Alerta de convite de outros servidores:
-//     const regex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li|club)|discordapp\.com\/invite|discord\.com\/invite)\/.+[a-z]/gi;
-//     if (regex.exec(msg.content)) {
-//     msg.channel.send(`ae ${adm}, maluco mando convite ae`);
-//     };
-//   });
-//   console.log("Função de resposta de mensagens - OK");
-// } catch (e) {
-//   console.error(`Função de resposta de mensagens - ERRO:\n${e}`);
-// }
