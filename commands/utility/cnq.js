@@ -5,14 +5,19 @@ module.exports = {
 		.setName('cnq')
 		.setDescription('Um jogo estilo caça níquel'),
 	async execute(interaction) {
+		if (!interaction.isChatInputCommand()) return;
+
+		await interaction.deferReply();
+
 		const numero1 = Math.round(Math.random() * 9);
 		const numero2 = Math.round(Math.random() * 9);
 		const numero3 = Math.round(Math.random() * 9);
-		let resultado = "";
 
+		await interaction.editReply(`{[( ${numero1} )]} {[( ${numero2} )]} {[( ${numero3} )]}`);
+		
 		if (numero1 === numero2 === numero3) {
-			resultado = ":tada::confetti_ball: PARABÉNS, VOCÊ GANHOU!!! :confetti_ball::tada:";
+			await interaction.followUp(':tada::confetti_ball: PARABÉNS, VOCÊ GANHOU!!! :confetti_ball::tada:');
 		}
-		await interaction.reply(`{[( ${numero1} )]} {[( ${numero2} )]} {[( ${numero3} )]}\n` + resultado);
+		
 	},
 };

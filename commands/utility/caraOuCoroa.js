@@ -5,6 +5,10 @@ module.exports = {
 		.setName('caraoucoroa')
 		.setDescription('Gera uma resposta aleatória de cara ou coroa'),
 	async execute(interaction) {
+        if (!interaction.isChatInputCommand()) return;
+
+		await interaction.deferReply();
+
         const nAleatorio = Math.round(Math.random() * 1);
         let resultado = '';
         switch (nAleatorio) {
@@ -15,6 +19,6 @@ module.exports = {
                 resultado = "cara";
             break;
         }
-		await interaction.reply(`o resultado foi ${resultado}.`);
+		await interaction.editReply(`o resultado foi ${resultado}.`);
 	},
 };
