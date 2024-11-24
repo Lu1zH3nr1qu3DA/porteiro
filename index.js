@@ -1,5 +1,7 @@
 // Login
-console.debug("Iniciando login...");
+const logger = require('./logger')
+
+logger.debug("Iniciando login...");
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -7,13 +9,14 @@ const { token } = require('./config.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-console.debug("    Iniciando comandos...");
+// Comandos
+logger.debug("Iniciando comandos...");
 client.commands = new Collection();
-const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
+const commandFoldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(commandFoldersPath);
 
 for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
+	const commandsPath = path.join(commandFoldersPath, folder);
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
@@ -21,13 +24,14 @@ for (const folder of commandFolders) {
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
 		} else {
-			console.error(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+			logger.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
 		}
 	}
 }
-console.debug("    Iniciando comandos - OK")
+logger.debug("Iniciando comandos - OK")
 
-console.debug("    Iniciando eventos...");
+// Eventos
+logger.debug("Iniciando eventos...");
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
@@ -40,10 +44,11 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-console.debug("    Iniciando eventos - OK");
+logger.debug("Iniciando eventos - OK");
 
+// Login
 client.login(token);
-console.debug("Iniciando login - OK");
+logger.debug("Iniciando login - OK");
 
 
 
@@ -53,12 +58,7 @@ console.debug("Iniciando login - OK");
 
 // Código antigo
 
-// // Responder mensagens:
-// try {
-//   client.on('message', msg => {
-//     if (msg.author.bot) return;
 //     const trumpskatededo = client.emojis.cache.find(emoji => emoji.name === "trumpskatededo");
-//     if (msg.channel === cc || msg.channel === ps) {
   
 //       // Ajuda:
 //       if (msg.content === '!help') {
