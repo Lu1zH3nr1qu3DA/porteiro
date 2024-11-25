@@ -7,8 +7,8 @@ module.exports = {
 	once: true,
 	execute(client) {
 		logger.info(`Pronto! Bot ${client.user.tag} logado com sucesso.`)
-		logger.debug('Iniciando atividade...')
+		logger.trace('Iniciando atividade...')
 		client.user.setActivity('Fogaréu Grátis', ActivityType.Playing)
-		logger.debug('Iniciando atividade - OK')
+		logger.trace('Iniciando atividade - OK')
 	},
 };

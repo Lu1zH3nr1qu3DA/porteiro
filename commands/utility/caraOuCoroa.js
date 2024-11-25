@@ -1,5 +1,8 @@
+const logger = require('../../logger')
+
 const { SlashCommandBuilder } = require('discord.js');
 
+logger.trace('Iniciando Comando Cara ou coroa ...')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('caraoucoroa')
@@ -22,3 +25,4 @@ module.exports = {
 		await interaction.editReply(`o resultado foi ${resultado}.`);
 	},
 };
+logger.trace('Iniciando Comando Cara ou coroa - OK')

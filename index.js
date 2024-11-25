@@ -1,7 +1,6 @@
-// Login
 const logger = require('./logger')
 
-logger.debug("Iniciando login...");
+logger.trace("Iniciando Porteiro ...");
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -10,7 +9,7 @@ const { token } = require('./config.json');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // Comandos
-logger.debug("Iniciando comandos...");
+logger.trace("Iniciando comandos...");
 client.commands = new Collection();
 const commandFoldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandFoldersPath);
@@ -28,10 +27,10 @@ for (const folder of commandFolders) {
 		}
 	}
 }
-logger.debug("Iniciando comandos - OK")
+logger.trace("Iniciando comandos - OK")
 
 // Eventos
-logger.debug("Iniciando eventos...");
+logger.trace("Iniciando eventos...");
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
@@ -44,11 +43,11 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-logger.debug("Iniciando eventos - OK");
+logger.trace("Iniciando eventos - OK");
 
 // Login
 client.login(token);
-logger.debug("Iniciando login - OK");
+logger.trace("Iniciando Porteiro - OK");
 
 
 

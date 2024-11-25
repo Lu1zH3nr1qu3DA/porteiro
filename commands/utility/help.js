@@ -1,5 +1,8 @@
+const logger = require('../../logger')
+
 const { SlashCommandBuilder } = require('discord.js');
 
+logger.trace('Iniciando Comando Help ...')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('help')
@@ -29,3 +32,4 @@ Use um desses comandos citados acima para executar a ação desejada.`
         );
 	},
 };
+logger.trace('Iniciando Comando Help - OK')

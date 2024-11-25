@@ -1,5 +1,8 @@
+const logger = require('../../logger')
+
 const { SlashCommandBuilder } = require('discord.js');
 
+logger.trace('Iniciando Comando Número aleatório ...')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('numaleatorio')
@@ -13,3 +16,4 @@ module.exports = {
         await interaction.editReply(`o resultado foi ${numAleatorio}.`);
 	},
 };
+logger.trace('Iniciando Comando Número aleatório - OK')

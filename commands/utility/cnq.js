@@ -1,5 +1,8 @@
+const logger = require('../../logger')
+
 const { SlashCommandBuilder } = require('discord.js');
 
+logger.trace('Iniciando Comando Caça níquel ...')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('cnq')
@@ -18,6 +21,6 @@ module.exports = {
 		if (numero1 === numero2 === numero3) {
 			await interaction.followUp(':tada::confetti_ball: PARABÉNS, VOCÊ GANHOU!!! :confetti_ball::tada:');
 		}
-		
 	},
 };
+logger.trace('Iniciando Comando Caça níquel - OK')
