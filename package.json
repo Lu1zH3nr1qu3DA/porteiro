@@ -1,18 +1,30 @@
 {
   "name": "porteiro",
-  "version": "6.3.15",
+  "version": "18.0.0",
   "description": "eh foda ser porteiro de todo esse gado",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ."
   },
   "author": "boladegorf",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.16.3",
+    "pino": "^9.5.0",
+    "pino-pretty": "^13.0.0"
   },
-  "devDependencies": {},
   "keywords": [
     "NossosNomesSaoAri"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lu1zH3nr1qu3DA/Porteiro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lu1zH3nr1qu3DA/Porteiro/issues"
+  },
+  "homepage": "https://github.com/Lu1zH3nr1qu3DA/Porteiro#readme",
+  "devDependencies": {
+    "eslint": "^9.15.0"
+  }
 }

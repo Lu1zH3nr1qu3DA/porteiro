@@ -1,206 +1,165 @@
-// Necessários para o login:
-'use strict';
-const Discord = require('discord.js');
-const config = require('./config.json');
-const client = new Discord.Client({ intents: [
-  Discord.GatewayIntentBits.Guilds,
-  Discord.GatewayIntentBits.GuildMessages
-]});
-client.login(config.token);
+const logger = require('./logger')
 
-// Ao fazer login:
-client.on('ready', () => {
-  client.user.setActivity('Fogaréu Grátis');
-  console.log(`Estou pronto!`);
-});
+logger.trace("Iniciando Porteiro ...");
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { token } = require('./config.json');
 
-// Boas vindas:
-client.on('guildMemberAdd', member => {
-  console.log(`[${member.guild.name}] (${member})`);
-  const wc = member.guild.channels.cache.find(ch => ch.name === 'boas-vindas');
-  const rc = member.guild.channels.cache.find(ch => ch.name === 'regras');
-  wc.send(`Eae, ${member}! Seja bem vindo ao servidor! Por favor, leia as ${rc.toString()} do servidor.
-${config.bfdgl}`);
-});
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-// Despedidas:
-client.on('guildMemberRemove', member => {
-  console.log(`[${member.guild.name}] ${member}`);
-  const fc = member.guild.channels.cache.find(ch => ch.name === 'despedidas');
-  fc.send(`Putz, ${member.user.username} foi embora. Vai e volta hein? ${config.fegl}`);
-});
+// Comandos
+logger.trace("Iniciando comandos...");
+client.commands = new Collection();
+const commandFoldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(commandFoldersPath);
 
-// Responder mensagens:
-client.on('message', msg => {
-  if (msg.author.bot) return;
-  const cc = msg.guild.channels.cache.find(ch => ch.name === 'comandos');
-  const ps = msg.guild.channels.cache.find(ch => ch.name === 'sessão-privada');
-  const adm = msg.guild.roles.cache.find(role => role.name === 'Administradores');
-  const trumpskatededo = client.emojis.cache.find(emoji => emoji.name === "trumpskatededo");
-  if (msg.channel === cc || msg.channel === ps) {
+for (const folder of commandFolders) {
+	const commandsPath = path.join(commandFoldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		if ('data' in command && 'execute' in command) {
+			client.commands.set(command.data.name, command);
+		} else {
+			logger.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
+		}
+	}
+}
+logger.trace("Iniciando comandos - OK")
 
-    // Ajuda:
-    if (msg.content === '!help') {
-      msg.reply(`essa é a lista de comandos que você pode usar:
-      !grn = gera um número aleatório entre 0 e 9.
-      !cnq = um jogo estilo caça níquel que gera 3 números aleatórios de 0 a 9. Se você conseguir um trio de números iguais, você vence!
-      !rd = gera um número aleatório entre 1 e 6.
-      !tc = gera uma resposta aleatória entre cara e coroa.
-      !avt = mostra seu avatar.
-      !avt @"usuário" = mostra o avatar da pessoa citada.
-      !since guild = mostra há quanto tempo o servidor foi criado.
-      !since @"usuário" = mostra há quanto tempo a pessoa citada tem sua conta no Discord.
-      !mbrct = mostra o número de membros do servidor (incluíndo bots).
-      !mbrsince = mostra há quanto tempo você está no servidor.
-      !mbrsince @"usuário" = mostra há quanto tempo o membro citado está no servidor.
-      Use um desses comandos citados acima para executar a ação desejada.`);
-      msg.channel.send(`${trumpskatededo}`);
-      console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !help`);
-    };
-    // Cara ou coroa:
-    if (msg.content === '!tc') {
-    const grnbr = Math.round(Math.random() * 1);
-      if (grnbr == 0 ) {
-        msg.reply(`o resultado foi coroa.`);
-        console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !tc - o resultado foi coroa.`);
-      };
-      if (grnbr == 1 ) {
-        msg.reply(`o resultado foi cara.`);
-        console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !tc - o resultado foi cara.`);
-      };
-    };
+// Eventos
+logger.trace("Iniciando eventos...");
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
-    // Número aleatório:
-    if (msg.content === '!grn') {
-    const grnbr = Math.round(Math.random() * 9);
-      msg.reply(`o resultado foi ${grnbr}.`);
-      console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !grn - o resultado foi ${grnbr}.`);
-    };
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+logger.trace("Iniciando eventos - OK");
 
-    //Caça níqueis:
-    if (msg.content === '!cnq') {
-    const r1 = Math.round(Math.random() * 9);
-    const r2 = Math.round(Math.random() * 9);
-    const r3 = Math.round(Math.random() * 9);
-      msg.channel.send(`{[( ${r1} )]} {[( ${r2} )]} {[( ${r3} )]}
-  Resultado de ${msg.author}.`);
-  console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !cnq - {[( ${r1} )]} {[( ${r2} )]} {[( ${r3} )]}`);
-      if (r1 == r2 == r3) {
-          msg.channel.send(`:tada::confetti_ball: PARABÉNS, ${msg.author} VOCÊ GANHOU!!! :confetti_ball::tada:`);
-          console.log(`[${msg.guild.name}/${msg.channel.name}] INCRÍVEL, ${msg.author.username} GANHOU!!!`);
-      };
-    };
+// Login
+client.login(token);
+logger.trace("Iniciando Porteiro - OK");
 
-    // Rolar dado:
-    if (msg.content === '!rd') {
-    const grnbr = Math.floor(Math.random() * 5 + 1);
-      msg.reply(`o resultado foi ${grnbr}.`);
-      console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !rd - o resultado foi ${grnbr}.`);
-    };
 
-    // Mostrar ULR do avatar do autor da mensagem:
-    if (msg.content === '!avt') {
-      msg.reply(`este é o seu avatar: ${msg.author.displayAvatarURL()}`);
-      console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !avt - este é o seu avatar: msg.author.displayAvatarURL()`);
-    };
 
-    // Mostrar quantidade de membros do servidor:
-    if (msg.content === '!mbrct') {
-      msg.reply(`atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
-      console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !mbrct - atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
-    };
 
-    // Mostrar URL do avatar do membro mencionado na mensagem:
-    if (!msg.guild) return;
-    if (msg.content.startsWith('!avt ')) {
-    const nossocasinha = msg.mentions.users.first();
-    const user = msg.guild.member(nossocasinha);
-      if (user) {
-      const member = msg.guild.member(user);
-        if (member) {
-          console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !avt @usuário - este é o avatar de ${nossocasinha.username}: ${nossocasinha.displayAvatarURL()}`);
-              msg.reply(`este é o avatar de ${user}: ${nossocasinha.displayAvatarURL()}`)
-        .catch(err => {
-              msg.channel.send('Ocorreu algum erro. Tente novamente.');
-              console.error(err);
-            });
-        } else {
-          msg.reply("esse membro não existe.");
-        }
-      } else {
-        msg.reply("você não mencionou o membro que quer ver o avatar.");
-      };
-    };
 
-    // Mostrar há quanto tempo o servidor foi criado:
-    if (msg.content === `!since guild`) {
-    const guild = msg.guild;
-          msg.channel.send(`O servidor existe desde ${guild.createdAt.toLocaleDateString()}. Já faz um bom tempo!`);
-          console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !since guild - O servidor existe desde ${guild.createdAt}!`);
-    };
 
-    // Mostrar há quanto tempo o membro mencionado tem seu perfil no Discord:
-    if (!msg.guild) return;
-    if (msg.content === `!since ${msg.mentions.users}`) {
-    const user = msg.mentions.users.first();
-      if (user) {
-      const member = msg.guild.member(user);
-        if (member) {
-          msg.reply(`${user} está no Discord desde ${user.createdAt}!`)
-        .catch(err => {
-          msg.channel.send('Ocorreu algum erro. Tente novamente.');
-          console.error(err);
-          });
-        } else {
-          msg.channel.send("esse membro não existe!");
-        };
-      } else {
-        msg.channel.send("você não mencionou o membro.");
-      };
-    };
-    
-    // Mostrar há quanto tempo o autor da mensagem é membro do servidor:
-    if (!msg.guild) return;
-    if (msg.content ==='!mbrsince') {
-    const member = msg.guild.member(msg.author);
-      if (member) {
-        msg.reply(`você está no servidor desde ${member.joinedAt}!`)
-          .catch(err => {
-            msg.channel.send('Ocorreu algum erro. Tente novamente.');
-            console.error(err);
-            });
-        } else {
-          msg.channel.send("Ocorreu algum erro. Tente novamente.");
-        }
-    }
 
-    // Mostrar há quanto tempo o membro mencionado está no servidor:
-    if (!msg.guild) return;
-    if (msg.content === `!mbrsince ${msg.mentions.users}`) {
-    const nossocasinha = msg.mentions.users.first();
-    const user = msg.guild.member(nossocasinha);
-      if (user) {
-      const member = msg.guild.member(user);
-        if (member) {
-          msg.reply(`${user} está no servidor desde ${user.joinedAt}!`)
-        .catch(err => {
-          msg.channel.send('Ocorreu algum erro. Tente novamente.');
-          console.error(err);
-            });
-        } else {
-          msg.channel.send("esse membro não existe.");
-        };
-      } else {
-        msg.channel.send("você não mencionou o membro que quer saber o tempo que ele está no Discord.");
-      };
-      };
-    };
+// Código antigo
 
-    // Alerta de mensagem contendo convite de outros servidores:
-    const regex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li|club)|discordapp\.com\/invite|discord\.com\/invite)\/.+[a-z]/gi;
-    if (regex.exec(msg.content)) {
-      msg.channel.send(`ae ${adm}, maluco mando convite ae`);
-    };
-});
-
-client.on('error', console.error);
+//     const trumpskatededo = client.emojis.cache.find(emoji => emoji.name === "trumpskatededo");
+  
+//       // Rolar dado:
+//       if (msg.content === '!rd') {
+//       const grnbr = Math.floor(Math.random() * 5 + 1);
+//         msg.reply(`o resultado foi ${grnbr}.`);
+//         console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !rd - o resultado foi ${grnbr}.`);
+//       };
+  
+//       // Mostrar URL do avatar do autor da mensagem:
+//       if (msg.content === '!avt') {
+//         msg.reply(`este é o seu avatar: ${msg.author.displayAvatarURL()}`);
+//         console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !avt - este é o seu avatar: msg.author.displayAvatarURL()`);
+//       };
+  
+//       // Mostrar número de membros do servidor:
+//       if (msg.content === '!mbrct') {
+//         msg.reply(`atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
+//         console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !mbrct - atualmente, o servidor está com ${msg.guild.memberCount} membros.`);
+//       };
+  
+//       // Mostrar URL do avatar do membro mencionado:
+//       if (!msg.guild) return;
+//       if (msg.content.startsWith('!avt ')) {
+//       const nossocasinha = msg.mentions.users.first();
+//       const user = msg.guild.member(nossocasinha);
+//         if (user) {
+//         const member = msg.guild.member(user);
+//           if (member) {
+//             console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !avt @usuário - este é o avatar de ${nossocasinha.username}: ${nossocasinha.displayAvatarURL()}`);
+//                 msg.reply(`este é o avatar de ${user}: ${nossocasinha.displayAvatarURL()}`)
+//           .catch(err => {
+//                 msg.channel.send('Ocorreu algum erro. Tente novamente.');
+//                 console.error(err);
+//               });
+//           } else {
+//             msg.reply("esse membro não existe.");
+//           }
+//         } else {
+//           msg.reply("você não mencionou o membro que quer ver o avatar.");
+//         };
+//       };
+  
+//       // Mostrar há quanto tempo o servidor foi criado:
+//       if (msg.content === `!since guild`) {
+//       const guild = msg.guild;
+//             msg.channel.send(`O servidor existe desde ${guild.createdAt.toLocaleDateString()}. Já faz um bom tempo!`);
+//             console.log(`[${msg.guild.name}/${msg.channel.name}] (${msg.author.username}) | !since guild - O servidor existe desde ${guild.createdAt}!`);
+//       };
+  
+//       // Mostrar há quanto tempo o membro mencionado tem seu perfil do Discord:
+//       if (!msg.guild) return;
+//       if (msg.content === `!since ${msg.mentions.users}`) {
+//       const user = msg.mentions.users.first();
+//         if (user) {
+//         const member = msg.guild.member(user);
+//           if (member) {
+//             msg.reply(`${user} está no Discord desde ${user.createdAt}!`)
+//           .catch(err => {
+//             msg.channel.send('Ocorreu algum erro. Tente novamente.');
+//             console.error(err);
+//             });
+//           } else {
+//             msg.channel.send("esse membro não existe!");
+//           };
+//         } else {
+//           msg.channel.send("você não mencionou o membro.");
+//         };
+//       };
+  
+//       // Mostrar há quanto tempo o autor da mensagem é membro do servidor:
+//       if (!msg.guild) return;
+//       if (msg.content ==='!mbrsince') {
+//       const member = msg.guild.member(msg.author);
+//         if (member) {
+//           msg.reply(`você está no servidor desde ${member.joinedAt}!`)
+//             .catch(err => {
+//               msg.channel.send('Ocorreu algum erro. Tente novamente.');
+//               console.error(err);
+//               });
+//           } else {
+//             msg.channel.send("Ocorreu algum erro. Tente novamente.");
+//           }
+//       }
+  
+//       // Mostrar há quanto tempo o membro mencionado faz parte do servidor:
+//       if (!msg.guild) return;
+//       if (msg.content === `!mbrsince ${msg.mentions.users}`) {
+//       const nossocasinha = msg.mentions.users.first();
+//       const user = msg.guild.member(nossocasinha);
+//         if (user) {
+//         const member = msg.guild.member(user);
+//           if (member) {
+//             msg.reply(`${user} está no servidor desde ${user.joinedAt}!`)
+//           .catch(err => {
+//             msg.channel.send('Ocorreu algum erro. Tente novamente.');
+//             console.error(err);
+//               });
+//           } else {
+//             msg.channel.send("esse membro não existe.");
+//           };
+//         } else {
+//           msg.channel.send("você não mencionou o membro que quer saber o tempo que ele está no Discord.");
+//         };
+//         };
+//       };
