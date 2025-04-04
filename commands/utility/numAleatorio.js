@@ -13,7 +13,7 @@ module.exports = {
 		await interaction.deferReply();
 
 		const numAleatorio = Math.round(Math.random() * 9);
-        await interaction.editReply(`o resultado foi ${numAleatorio}.`);
+        await interaction.editReply(`o resultado foi  \`${numAleatorio}\`.`);
 	},
 };
 logger.trace('Iniciando Comando Número aleatório - OK')
