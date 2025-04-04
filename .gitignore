@@ -1,4 +1,7 @@
 /.vscode
 /node_modules
 /config.json
+/delete-commands.js
+/deploy-commands.js
 /discloud.config
+/.cache
