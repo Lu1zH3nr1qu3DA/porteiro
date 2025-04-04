@@ -1,5 +1,5 @@
 const pino = require("pino")({
-    level: "warn",
+    level: "info",
     transport: {
         target: 'pino-pretty',
         options: {
