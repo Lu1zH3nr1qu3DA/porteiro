@@ -22,7 +22,7 @@ module.exports = {
                 resultado = "cara";
             break;
         }
-		await interaction.editReply(`o resultado foi ${resultado}.`);
+		await interaction.editReply(`o resultado foi  \`${resultado}\`.`);
 	},
 };
 logger.trace('Iniciando Comando Cara ou coroa - OK')

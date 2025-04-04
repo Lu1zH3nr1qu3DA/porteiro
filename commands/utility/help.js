@@ -21,7 +21,6 @@ Essa é a lista de comandos que você pode usar:
 * \`/help\` - mostra essa mensagem
 
 Use um desses comandos citados acima para executar a ação desejada.`, 
-                ephemeral: true 
             }
         );
 	},

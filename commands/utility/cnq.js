@@ -16,7 +16,7 @@ module.exports = {
 		const numero2 = Math.round(Math.random() * 9);
 		const numero3 = Math.round(Math.random() * 9);
 
-		await interaction.editReply(`{[( ${numero1} )]} {[( ${numero2} )]} {[( ${numero3} )]}`);
+		await interaction.editReply(`\`${numero1}, ${numero2}, ${numero3}\``);
 		
 		if (numero1 === numero2 === numero3) {
 			await interaction.followUp(':tada::confetti_ball: PARABÉNS, VOCÊ GANHOU!!! :confetti_ball::tada:');
