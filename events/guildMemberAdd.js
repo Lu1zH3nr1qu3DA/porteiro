@@ -1,4 +1,4 @@
-const logger = require('../logger')
+const logger = require('../logger');
 
 const { Events } = require('discord.js');
 const { baldiFortDanceGifLink } = require('../config.json');

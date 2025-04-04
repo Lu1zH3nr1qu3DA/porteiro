@@ -1,4 +1,4 @@
-const logger = require('./logger')
+const logger = require('./logger');
 
 logger.trace("Iniciando Porteiro ...");
 const fs = require('node:fs');
