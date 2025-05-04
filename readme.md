@@ -16,8 +16,6 @@ Um bot multifunções escrito em JavaScript usando node.js e discord.js v14
 `caraoucoroa` - gera uma resposta entre `cara` ou `coroa`
 
 
-
-
 ### Eventos
 
 boas vindas (`guildMemberAdd`) - envia uma mensagem de boas vindas quando um novo membro é adicionado
